@@ -4,23 +4,21 @@ import AdminDashboard from './pages/AdminDashboard';
 import InstructorDashboard from './pages/InstructorDashboard';
 
 function App() {
-  const [user, setUser] = useState(null);
-  const [role, setRole] = useState(null); // 'admin' or 'instructor'
+  const [user, setUser] = useState(() => {
+    try {
+      const stored = localStorage.getItem('iti_session');
+      return stored ? JSON.parse(stored).user : null;
+    } catch { return null; }
+  });
+  
+  const [role, setRole] = useState(() => {
+    try {
+      const stored = localStorage.getItem('iti_session');
+      return stored ? JSON.parse(stored).role : null;
+    } catch { return null; }
+  });
+  
   const [isLoading, setIsLoading] = useState(false);
-
-  useEffect(() => {
-    // Restore session from localStorage on startup
-    const storedSession = localStorage.getItem('iti_session');
-    if (storedSession) {
-      try {
-        const session = JSON.parse(storedSession);
-        setUser(session.user);
-        setRole(session.role);
-      } catch (err) {
-        localStorage.removeItem('iti_session');
-      }
-    }
-  }, []);
 
   const handleLogin = (userData, userRole) => {
     setUser(userData);
