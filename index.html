@@ -1,0 +1,731 @@
+<!DOCTYPE html>
+<html lang="hi">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ITI Instructor Management System</title>
+    <meta name="description" content="ITI Instructor Management System - Employee ID Card Generation & Management">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Noto+Sans+Devanagari:wght@400;500;600;700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="style.css?v=2">
+</head>
+
+<body>
+
+    <!-- Loading Overlay -->
+    <div id="loadingOverlay" class="loading-overlay">
+        <div class="loader-spinner"></div>
+        <p>Loading...</p>
+    </div>
+
+    <!-- ========== LOGIN SCREEN ========== -->
+    <main id="loginScreen" class="screen active">
+        <div class="login-bg" aria-hidden="true">
+            <div class="bg-circle c1"></div>
+            <div class="bg-circle c2"></div>
+            <div class="bg-circle c3"></div>
+        </div>
+        <section class="login-container" aria-labelledby="loginTitle">
+            <div class="login-header">
+                <div class="iti-emblem">
+                    <svg viewBox="0 0 80 80" fill="none">
+                        <circle cx="40" cy="40" r="38" stroke="currentColor" stroke-width="2" />
+                        <path d="M40 12 L40 68 M20 25 L60 25 M20 40 L60 40 M20 55 L60 55 M25 12 L25 68 M55 12 L55 68"
+                            stroke="currentColor" stroke-width="1.5" opacity="0.5" />
+                        <circle cx="40" cy="40" r="12" stroke="currentColor" stroke-width="2" />
+                        <text x="40" y="44" text-anchor="middle" fill="currentColor" font-size="12"
+                            font-weight="bold">ITI</text>
+                    </svg>
+                </div>
+                <h1 id="loginTitle">ITI Instructor System</h1>
+                <p class="subtitle">औद्योगिक प्रशिक्षण संस्थान</p>
+            </div>
+
+            <nav class="login-tabs" role="tablist" aria-label="Login Tabs">
+                <button type="button" class="tab-btn active" data-tab="instructor" id="tabInstructor" role="tab"
+                    aria-selected="true" aria-controls="instructorLoginForm">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                        aria-hidden="true">
+                        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+                        <circle cx="12" cy="7" r="4" />
+                    </svg>
+                    Instructor
+                </button>
+                <button type="button" class="tab-btn" data-tab="head" id="tabHead" role="tab" aria-selected="false"
+                    aria-controls="headLoginForm">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                        aria-hidden="true">
+                        <path d="M12 2L2 7l10 5 10-5-10-5z" />
+                        <path d="M2 17l10 5 10-5" />
+                        <path d="M2 12l10 5 10-5" />
+                    </svg>
+                    Head / Admin
+                </button>
+            </nav>
+
+            <!-- Instructor Login Form -->
+            <form id="instructorLoginForm" class="login-form active" role="tabpanel" aria-labelledby="tabInstructor"
+                onsubmit="return false;">
+                <div class="form-group">
+                    <label for="instrId">Emp. ID</label>
+                    <input type="text" id="instrId" placeholder="Enter your Emp. ID" required autocomplete="off">
+                </div>
+                <div class="form-group">
+                    <label for="instrDob">Date of Birth</label>
+                    <input type="date" id="instrDob" required>
+                </div>
+                <button type="submit" class="btn-primary" id="instrLoginBtn">
+                    <span>Login</span>
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M5 12h14M12 5l7 7-7 7" />
+                    </svg>
+                </button>
+                <p id="instrError" class="error-msg"></p>
+            </form>
+
+            <!-- Head Login Form -->
+            <form id="headLoginForm" class="login-form" role="tabpanel" aria-labelledby="tabHead"
+                onsubmit="return false;">
+                <div class="form-group">
+                    <label for="headUser">Username</label>
+                    <input type="text" id="headUser" placeholder="Enter admin username" required
+                        autocomplete="username">
+                </div>
+                <div class="form-group">
+                    <label for="headPass">Password</label>
+                    <div class="password-field">
+                        <input type="password" id="headPass" placeholder="Enter admin password" required>
+                        <button type="button" class="toggle-pass" onclick="togglePassword('headPass', this)">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="2">
+                                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
+                                <circle cx="12" cy="12" r="3" />
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+                <button type="submit" class="btn-primary" id="headLoginBtn">
+                    <span>Login as Head</span>
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M5 12h14M12 5l7 7-7 7" />
+                    </svg>
+                </button>
+                <p id="headError" class="error-msg">
+            </form>
+        </section>
+        <footer class="site-footer">Made by A COPA Student <strong>Tushar Khatri</strong> | Session 2025-26</footer>
+    </main>
+
+    <!-- ========== INSTRUCTOR DASHBOARD ========== -->
+    <main id="instructorDashboard" class="screen">
+        <header class="topbar">
+            <div class="topbar-left">
+                <div class="nav-logo">
+                    <svg viewBox="0 0 40 40" fill="none">
+                        <circle cx="20" cy="20" r="18" stroke="currentColor" stroke-width="2" /><text x="20" y="24"
+                            text-anchor="middle" fill="currentColor" font-size="8" font-weight="bold">ITI</text>
+                    </svg>
+                </div>
+                <h2>Instructor Panel</h2>
+            </div>
+            <div class="topbar-right">
+                <span id="instrWelcome" class="welcome-text"></span>
+                <button class="btn-logout" onclick="logout()" id="instrLogoutBtn">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
+                        <polyline points="16 17 21 12 16 7" />
+                        <line x1="21" y1="12" x2="9" y2="12" />
+                    </svg>
+                    Logout
+                </button>
+            </div>
+            </div>
+        </header>
+
+        <div class="dashboard-content">
+            <div class="profile-section">
+                <div class="profile-card glass-card">
+                    <div class="profile-photo-wrap">
+                        <img id="instrProfilePhoto" src="" alt="Profile Photo">
+                    </div>
+                    <div class="profile-info">
+                        <h3 id="instrProfileName"></h3>
+                        <p class="profile-designation" id="instrProfileDesig"></p>
+                        <div class="profile-details">
+                            <div class="detail-item">
+                                <span class="detail-label">Emp. ID</span>
+                                <span class="detail-value" id="instrProfileId"></span>
+                            </div>
+                            <div class="detail-item">
+                                <span class="detail-label">Trade</span>
+                                <span class="detail-value" id="instrProfileTrade"></span>
+                            </div>
+                            <div class="detail-item">
+                                <span class="detail-label">Father's Name</span>
+                                <span class="detail-value" id="instrProfileFather"></span>
+                            </div>
+                            <div class="detail-item">
+                                <span class="detail-label">Phone</span>
+                                <span class="detail-value" id="instrProfilePhone"></span>
+                            </div>
+                            <div class="detail-item">
+                                <span class="detail-label">Email</span>
+                                <span class="detail-value" id="instrProfileEmail"></span>
+                            </div>
+                            <div class="detail-item">
+                                <span class="detail-label">Date of Birth</span>
+                                <span class="detail-value" id="instrProfileDob"></span>
+                            </div>
+                            <div class="detail-item">
+                                <span class="detail-label">Join Date</span>
+                                <span class="detail-value" id="instrProfileJoin"></span>
+                            </div>
+                            <div class="detail-item">
+                                <span class="detail-label">Blood Group</span>
+                                <span class="detail-value" id="instrProfileBlood"></span>
+                            </div>
+                            <div class="detail-item">
+                                <span class="detail-label">Address</span>
+                                <span class="detail-value" id="instrProfileAddress"></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="idcard-section">
+                <h3 class="section-title">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <rect x="2" y="3" width="20" height="18" rx="2" />
+                        <circle cx="9" cy="10" r="3" />
+                        <path d="M15 8h4M15 12h4M5 17c0-2 2-3 4-3s4 1 4 3" />
+                    </svg>
+                    Your Employee ID Card
+                </h3>
+                <div class="idcard-flip-container">
+                    <p class="flip-hint">👆 Click card to flip (Front / Back)</p>
+                    <div class="idcard-preview-wrap">
+                        <div class="id-card-flipper" id="instrCardFlipper" onclick="this.classList.toggle('flipped')">
+                            <div id="instrIdCardFront" class="id-card id-card-front"></div>
+                            <div id="instrIdCardBack" class="id-card id-card-back"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="idcard-actions">
+                    <button class="btn-download" onclick="downloadIdCard('instrIdCardFront', 'instrIdCardBack')"
+                        id="instrDownloadBtn">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2">
+                            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                            <polyline points="7 10 12 15 17 10" />
+                            <line x1="12" y1="15" x2="12" y2="3" />
+                        </svg>
+                        Download ID Card (Front + Back)
+                    </button>
+                </div>
+            </div>
+        </div>
+        </div>
+        <footer class="site-footer">Made by A COPA Student <strong>Tushar Khatri</strong> | Session 2025-26</footer>
+    </main>
+
+    <!-- ========== HEAD/ADMIN DASHBOARD ========== -->
+    <main id="headDashboard" class="screen">
+        <header class="topbar head-topbar">
+            <div class="topbar-left">
+                <div class="nav-logo">
+                    <svg viewBox="0 0 40 40" fill="none">
+                        <circle cx="20" cy="20" r="18" stroke="currentColor" stroke-width="2" /><text x="20" y="24"
+                            text-anchor="middle" fill="currentColor" font-size="8" font-weight="bold">ITI</text>
+                    </svg>
+                </div>
+                <h2>Head / Admin Panel</h2>
+            </div>
+            <div class="topbar-right">
+                <button class="btn-logout" onclick="logout()" id="headLogoutBtn">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
+                        <polyline points="16 17 21 12 16 7" />
+                        <line x1="21" y1="12" x2="9" y2="12" />
+                    </svg>
+                    Logout
+                </button>
+            </div>
+            </div>
+        </header>
+
+        <div class="head-content">
+            <aside class="sidebar">
+                <button class="sidebar-btn active" data-section="registerSection" id="navRegister">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
+                        <circle cx="8.5" cy="7" r="4" />
+                        <line x1="20" y1="8" x2="20" y2="14" />
+                        <line x1="23" y1="11" x2="17" y2="11" />
+                    </svg>
+                    <span>Register Instructor</span>
+                </button>
+                <button class="sidebar-btn" data-section="viewSection" id="navView">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
+                        <circle cx="9" cy="7" r="4" />
+                        <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
+                        <path d="M16 3.13a4 4 0 0 1 0 7.75" />
+                    </svg>
+                    <span>View Instructors</span>
+                </button>
+                <button class="sidebar-btn" data-section="idcardSection" id="navIdCard">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <rect x="2" y="3" width="20" height="18" rx="2" />
+                        <circle cx="9" cy="10" r="3" />
+                        <path d="M15 8h4M15 12h4M5 17c0-2 2-3 4-3s4 1 4 3" />
+                    </svg>
+                    <span>ID Cards</span>
+                </button>
+                <button class="sidebar-btn" data-section="settingsSection" id="navSettings">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="12" cy="12" r="3" />
+                        <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z" />
+                    </svg>
+                    <span>Settings</span>
+                </button>
+            </aside>
+
+            <main class="main-area">
+                <!-- Register Section -->
+                <section id="registerSection" class="content-section active" aria-labelledby="regTitle">
+                    <div class="section-header">
+                        <h3 id="regTitle">Register New Instructor</h3>
+                        <p>Fill in all details — these will appear on the Employee ID Card</p>
+                    </div>
+                    <form id="registerForm" class="register-form glass-card" onsubmit="return false;">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="regEmpId">Employee ID *</label>
+                                <input type="text" id="regEmpId" placeholder="e.g. RJJS1234567890" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="regName">Full Name *</label>
+                                <input type="text" id="regName" placeholder="Enter full name" required>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="regFather">Father's Name *</label>
+                                <input type="text" id="regFather" placeholder="Enter father's name" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="regTrade">Trade / Department *</label>
+                                <select id="regTrade" required>
+                                    <option value="">Select Trade</option>
+                                    <option value="Electrician">Electrician</option>
+                                    <option value="Fitter">Fitter</option>
+                                    <option value="Turner">Turner</option>
+                                    <option value="Welder">Welder</option>
+                                    <option value="Mechanic Motor Vehicle">Mechanic Motor Vehicle</option>
+                                    <option value="COPA">COPA</option>
+                                    <option value="Stenographer">Stenographer</option>
+                                    <option value="Draughtsman Civil">Draughtsman Civil</option>
+                                    <option value="Draughtsman Mechanical">Draughtsman Mechanical</option>
+                                    <option value="Electronics Mechanic">Electronics Mechanic</option>
+                                    <option value="Information Technology">Information Technology</option>
+                                    <option value="Plumber">Plumber</option>
+                                    <option value="Carpenter">Carpenter</option>
+                                    <option value="Machinist">Machinist</option>
+                                    <option value="Diesel Mechanic">Diesel Mechanic</option>
+                                    <option value="Other">Other</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="regDesig">Designation *</label>
+                                <select id="regDesig" required>
+                                    <option value="">Select Designation</option>
+                                    <option value="Instructor">Instructor</option>
+                                    <option value="Senior Instructor">Senior Instructor</option>
+                                    <option value="Superintendent">Superintendent</option>
+                                    <option value="Workshop Instructor">Workshop Instructor</option>
+                                    <option value="Guest Instructor">Guest Instructor</option>
+                                    <option value="Craft Instructor">Craft Instructor</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="regPhone">Contact Number *</label>
+                                <input type="tel" id="regPhone" placeholder="Enter contact number" required
+                                    pattern="[0-9]{10}">
+                            </div>
+                            <div class="form-group">
+                                <label for="regEmail">E-mail</label>
+                                <input type="email" id="regEmail" placeholder="Enter email address">
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="regDob">Date of Birth *</label>
+                                <input type="date" id="regDob" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="regJoin">Joining Date *</label>
+                                <input type="date" id="regJoin" required>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="regBlood">Blood Group</label>
+                                <select id="regBlood">
+                                    <option value="">Select</option>
+                                    <option value="A+">A+</option>
+                                    <option value="A-">A-</option>
+                                    <option value="B+">B+</option>
+                                    <option value="B-">B-</option>
+                                    <option value="AB+">AB+</option>
+                                    <option value="AB-">AB-</option>
+                                    <option value="O+">O+</option>
+                                    <option value="O-">O-</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="regAadhar">Aadhar No.</label>
+                                <input type="text" id="regAadhar" placeholder="Enter 12-digit Aadhar No."
+                                    maxlength="12">
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="regPan">Pan Card No.</label>
+                                <input type="text" id="regPan" placeholder="Enter PAN Card No." maxlength="10">
+                            </div>
+                            <div class="form-group">
+                                <label for="regCpf">CPF/GPF No.</label>
+                                <input type="text" id="regCpf" placeholder="Enter CPF/GPF No.">
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="regSi">SI No.</label>
+                                <input type="text" id="regSi" placeholder="Enter SI No.">
+                            </div>
+                            <div class="form-group">
+                                <label for="regAddress">Address *</label>
+                                <input type="text" id="regAddress" placeholder="Full address with city, pin" required>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="regItiName">ITI Name *</label>
+                                <input type="text" id="regItiName" placeholder="e.g. Government ITI, SAM" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="regItiAddress">ITI Address</label>
+                                <input type="text" id="regItiAddress" placeholder="e.g. W-6, Residency Road, Jodhpur">
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group" style="width: 50%;">
+                                <label for="regPhoto">Photo *</label>
+                                <input type="file" id="regPhoto" accept="image/*" required>
+                                <div class="photo-preview" id="photoPreview">
+                                    <img id="previewImg" src="" alt="Photo Preview">
+                                </div>
+                            </div>
+                            <div class="form-group" style="width: 50%;">
+                                <label for="regSignature">Instructor Signature *</label>
+                                <input type="file" id="regSignature" accept="image/*" required>
+                                <div class="photo-preview" id="signaturePreview" style="border-radius: 4px; background: #fff;">
+                                    <img id="previewSigImg" src="" alt="Signature Preview" style="object-fit: contain; mix-blend-mode: multiply;">
+                                </div>
+                            </div>
+                        </div>
+
+                        <button type="submit" class="btn-primary btn-register" id="registerBtn">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="2">
+                                <path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
+                                <circle cx="8.5" cy="7" r="4" />
+                                <line x1="20" y1="8" x2="20" y2="14" />
+                                <line x1="23" y1="11" x2="17" y2="11" />
+                            </svg>
+                            <span>Register Instructor</span>
+                        </button>
+                        <p id="regSuccess" class="success-msg"></p>
+                        <p id="regError" class="error-msg"></p>
+                    </form>
+                </section>
+
+                <!-- View Instructors Section -->
+                <section id="viewSection" class="content-section" aria-labelledby="viewTitle">
+                    <div class="section-header">
+                        <h3 id="viewTitle">Registered Instructors</h3>
+                        <div class="search-bar">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="2">
+                                <circle cx="11" cy="11" r="8" />
+                                <line x1="21" y1="21" x2="16.65" y2="16.65" />
+                            </svg>
+                            <input type="text" id="searchInstructor" placeholder="Search by name, ID, or trade..."
+                                oninput="filterInstructors()">
+                        </div>
+                    </div>
+                    <div class="stats-row">
+                        <div class="stat-card glass-card">
+                            <div class="stat-icon blue">
+                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                    stroke-width="2">
+                                    <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
+                                    <circle cx="9" cy="7" r="4" />
+                                    <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
+                                    <path d="M16 3.13a4 4 0 0 1 0 7.75" />
+                                </svg>
+                            </div>
+                            <div>
+                                <p class="stat-count" id="totalInstructors">0</p>
+                                <p class="stat-label">Total Instructors</p>
+                            </div>
+                        </div>
+                        <div class="stat-card glass-card">
+                            <div class="stat-icon green">
+                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                    stroke-width="2">
+                                    <rect x="2" y="3" width="20" height="18" rx="2" />
+                                    <circle cx="9" cy="10" r="3" />
+                                    <path d="M15 8h4M15 12h4M5 17c0-2 2-3 4-3s4 1 4 3" />
+                                </svg>
+                            </div>
+                            <div>
+                                <p class="stat-count" id="totalIdCards">0</p>
+                                <p class="stat-label">ID Cards Generated</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="instructorsList" class="instructors-grid"></div>
+                    <p id="noInstructors" class="empty-state" style="display:none;">
+                        <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="1.5">
+                            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
+                            <circle cx="9" cy="7" r="4" />
+                            <line x1="19" y1="8" x2="19" y2="14" />
+                            <line x1="22" y1="11" x2="16" y2="11" />
+                        </svg>
+                        <span>No instructors registered yet. Go to "Register Instructor" to add one.</span>
+                    </p>
+                </section>
+
+                <!-- ID Card Section -->
+                <section id="idcardSection" class="content-section" aria-labelledby="idTitle">
+                    <div class="section-header">
+                        <h3 id="idTitle">Instructor ID Cards</h3>
+                        <p>Select an instructor to view and download their Employee ID Card</p>
+                    </div>
+                    <div class="idcard-selector">
+                        <label for="selectInstructor">Select Instructor</label>
+                        <select id="selectInstructor" onchange="showSelectedIdCard()">
+                            <option value="">-- Choose Instructor --</option>
+                        </select>
+                    </div>
+                    <div id="headIdCardWrap" style="display:none;">
+                        <p class="flip-hint">👆 Click card to flip (Front / Back)</p>
+                        <div class="idcard-preview-wrap">
+                            <div class="id-card-flipper" id="headCardFlipper"
+                                onclick="this.classList.toggle('flipped')">
+                                <div id="headIdCardFront" class="id-card id-card-front"></div>
+                                <div id="headIdCardBack" class="id-card id-card-back"></div>
+                            </div>
+                        </div>
+                        <div class="idcard-actions">
+                            <button class="btn-download" onclick="downloadIdCard('headIdCardFront', 'headIdCardBack')"
+                                id="headDownloadBtn">
+                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                    stroke-width="2">
+                                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                                    <polyline points="7 10 12 15 17 10" />
+                                    <line x1="12" y1="15" x2="12" y2="3" />
+                                </svg>
+                                Download ID Card (Front + Back)
+                            </button>
+                        </div>
+                    </div>
+                </section>
+                <!-- Settings Section -->
+                <section id="settingsSection" class="content-section" style="display: none;" aria-labelledby="settingsTitle">
+                    <div class="section-header">
+                        <h3 id="settingsTitle">Admin Settings</h3>
+                        <p>Configure general settings and upload the Director Training signature.</p>
+                    </div>
+                    <div class="settings-card glass-card" style="padding: 24px; max-width: 500px; margin: 0 auto;">
+                        <form id="adminSettingsForm" onsubmit="return false;">
+                            <div class="form-group">
+                                <label for="adminSignatureUpload">Director Training Signature</label>
+                                <input type="file" id="adminSignatureUpload" accept="image/*">
+                                <div class="photo-preview" id="adminSignaturePreview" style="background: #fff; border-radius: 4px; height: 100px; margin-top: 10px;">
+                                    <img id="previewAdminSigImg" src="assets/admin_signature.png" alt="Admin Signature Preview" style="object-fit: contain; mix-blend-mode: multiply;" onerror="this.src=''; this.alt='No signature uploaded'">
+                                </div>
+                                <p style="font-size: 11px; color: #666; margin-top: 5px;">Upload a clean image of the signature. White backgrounds will be removed automatically on the ID card.</p>
+                            </div>
+                            <button type="submit" class="btn-primary" id="saveSettingsBtn" style="margin-top: 15px; width: 100%;">
+                                Save Settings
+                            </button>
+                            <p id="settingsSuccess" class="success-msg"></p>
+                            <p id="settingsError" class="error-msg"></p>
+                        </form>
+                    </div>
+                </section>
+                
+            </main>
+        </div>
+        <footer class="site-footer">Made by A COPA Student <strong>Tushar Khatri</strong> | Session 2025-26</footer>
+    </main>
+
+    <!-- ========== ID Card Modal ========== -->
+    <div id="idCardModal" class="modal-overlay" style="display:none;" onclick="closeModal(event)" role="dialog"
+        aria-modal="true" aria-label="ID Card Preview">
+        <div class="modal-content">
+            <button class="modal-close" onclick="document.getElementById('idCardModal').style.display='none'">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <line x1="18" y1="6" x2="6" y2="18" />
+                    <line x1="6" y1="6" x2="18" y2="18" />
+                </svg>
+            </button>
+            <p class="flip-hint" style="color:#94a3b8;text-align:center;margin-bottom:10px;">👆 Click card to flip</p>
+            <div class="idcard-preview-wrap">
+                <div class="id-card-flipper" id="modalCardFlipper" onclick="this.classList.toggle('flipped')">
+                    <div id="modalIdCardFront" class="id-card id-card-front"></div>
+                    <div id="modalIdCardBack" class="id-card id-card-back"></div>
+                </div>
+            </div>
+            <div class="idcard-actions">
+                <button class="btn-download" onclick="downloadIdCard('modalIdCardFront', 'modalIdCardBack')"
+                    id="modalDownloadBtn">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                        <polyline points="7 10 12 15 17 10" />
+                        <line x1="12" y1="15" x2="12" y2="3" />
+                    </svg>
+                    Download ID Card
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast -->
+    <div id="toast" class="toast"></div>
+
+    <!-- Core UI Logic (inline for guaranteed execution) -->
+    <script>
+        (function () {
+            // ========== TAB SWITCHING ==========
+            var tabs = document.querySelectorAll('.tab-btn');
+            tabs.forEach(function (btn) {
+                btn.addEventListener('click', function () {
+                    tabs.forEach(function (b) { b.classList.remove('active'); b.setAttribute('aria-selected', 'false'); });
+                    btn.classList.add('active');
+                    btn.setAttribute('aria-selected', 'true');
+                    var tab = btn.getAttribute('data-tab');
+                    document.querySelectorAll('.login-form').forEach(function (f) { f.classList.remove('active'); });
+                    if (tab === 'instructor') {
+                        document.getElementById('instructorLoginForm').classList.add('active');
+                    } else {
+                        document.getElementById('headLoginForm').classList.add('active');
+                    }
+                });
+            });
+
+            // ========== PASSWORD TOGGLE ==========
+            window.togglePassword = function (inputId, btn) {
+                var input = document.getElementById(inputId);
+                if (input.type === 'password') {
+                    input.type = 'text';
+                    btn.innerHTML = '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94"/><path d="M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19"/><line x1="1" y1="1" x2="23" y2="23"/></svg>';
+                } else {
+                    input.type = 'password';
+                    btn.innerHTML = '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>';
+                }
+            };
+
+            // ========== CLOSE MODAL ==========
+            window.closeModal = function (e) {
+                if (e.target === e.currentTarget) {
+                    document.getElementById('idCardModal').style.display = 'none';
+                }
+            };
+
+            // ========== SCREEN MANAGEMENT ==========
+            function showScreen(id) {
+                document.querySelectorAll('.screen').forEach(function (s) { s.classList.remove('active'); });
+                document.getElementById(id).classList.add('active');
+            }
+
+            function showToastMsg(msg, type) {
+                var t = document.getElementById('toast');
+                if (t) { t.textContent = msg; t.className = 'toast ' + (type || 'success') + ' show'; setTimeout(function () { t.className = 'toast'; }, 3000); }
+            }
+
+            // ========== HEAD LOGIN (inline — guaranteed) ==========
+            var headForm = document.getElementById('headLoginForm');
+            if (headForm) {
+                headForm.addEventListener('submit', function (e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    var user = document.getElementById('headUser').value.trim();
+                    var pass = document.getElementById('headPass').value;
+                    var errEl = document.getElementById('headError');
+
+                    // Check credentials (inline fallback)
+                    if (user === 'jaisalmeriti@gmail.com' && pass === '345001') {
+                        errEl.textContent = '';
+                        showScreen('headDashboard');
+                        showToastMsg('Welcome, Admin!', 'success');
+                        // Let app.js handle data loading if available
+                        if (typeof window._headLoginSuccess === 'function') {
+                            window._headLoginSuccess();
+                        }
+                    } else {
+                        errEl.textContent = 'Invalid admin credentials';
+                    }
+                    return false;
+                });
+            }
+
+            // ========== INSTRUCTOR LOGIN (inline — guaranteed) ==========
+            var instrForm = document.getElementById('instructorLoginForm');
+            if (instrForm) {
+                instrForm.addEventListener('submit', function (e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    var id = document.getElementById('instrId').value.trim();
+                    var dob = document.getElementById('instrDob').value;
+                    var errEl = document.getElementById('instrError');
+
+                    if (!id || !dob) { errEl.textContent = 'Please fill all fields'; return false; }
+
+                    // Delegate to app.js async handler if available
+                    if (typeof window._instrLoginHandler === 'function') {
+                        window._instrLoginHandler(id, dob, errEl);
+                    } else {
+                        errEl.textContent = 'System not ready. Please wait and try again.';
+                    }
+                    return false;
+                });
+            }
+
+            // Hide loading overlay immediately
+            var lo = document.getElementById('loadingOverlay');
+            if (lo) lo.style.display = 'none';
+
+            console.log('✅ Inline UI handlers loaded successfully');
+        })();
+    </script>
+
+    <!-- Supabase Client -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script src="app.js?v=6"></script>
+</body>
+
+</html>
