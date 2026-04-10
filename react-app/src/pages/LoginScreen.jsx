@@ -9,6 +9,7 @@ export default function LoginScreen({ onLogin, setLoading }) {
   const [adminUser, setAdminUser] = useState('');
   const [adminPass, setAdminPass] = useState('');
   const [showPassword, setShowPassword] = useState(false);
+  const [showContact, setShowContact] = useState(false);
   const [errorText, setErrorText] = useState('');
 
   const handleInstructorLogin = async (e) => {
@@ -176,8 +177,37 @@ export default function LoginScreen({ onLogin, setLoading }) {
         )}
       </section>
 
-      <footer className="mt-12 text-slate-500 text-sm font-medium relative z-10">
-        Made by A COPA Student <strong className="text-slate-700">Tushar Khatri</strong> | Session 2025-26
+      <footer className="mt-12 text-slate-500 text-sm font-medium relative z-10 flex flex-col items-center gap-4">
+        <div className="flex items-center gap-1.5 flex-wrap justify-center">
+           <span>Made by A COPA Student</span>
+           <strong className="text-slate-700">Tushar Khatri</strong>
+           <span className="text-slate-400 mx-1">|</span>
+           <span>Session 2025-26</span>
+        </div>
+        
+        <div className="relative">
+             <button 
+               onClick={() => setShowContact(!showContact)} 
+               className="font-bold text-blue-600 hover:bg-blue-50 bg-white shadow-sm transition-all focus:ring-2 focus:ring-blue-200 flex items-center gap-2 px-4 py-2 rounded-full border border-blue-200 text-xs tracking-wide"
+             >
+               <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M15.05 5A5 5 0 0 1 19 8.95M15.05 1A9 9 0 0 1 23 8.94m-1 7.98v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path></svg>
+               Contact Help Desk
+             </button>
+             
+             {showContact && (
+                <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-3 w-48 bg-white rounded-xl shadow-[0_10px_40px_-10px_rgba(0,0,0,0.15)] border border-slate-200 p-2 animate-in fade-in zoom-in-95 duration-200 flex flex-col gap-1.5">
+                   <a href="tel:8094353411" className="flex items-center gap-3 px-3 py-2.5 text-xs font-semibold text-slate-700 hover:text-green-700 bg-slate-50 hover:bg-green-50 rounded-lg transition-colors">
+                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-green-600"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path></svg>
+                     Call
+                   </a>
+                   <a href="mailto:tusharkhatri002@gmail.com" className="flex items-center gap-3 px-3 py-2.5 text-xs font-semibold text-slate-700 hover:text-blue-700 bg-slate-50 hover:bg-blue-50 rounded-lg transition-colors">
+                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-blue-600"><rect width="20" height="16" x="2" y="4" rx="2"></rect><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"></path></svg>
+                     Email
+                   </a>
+                   <div className="absolute -bottom-1.5 left-1/2 -translate-x-1/2 w-3 h-3 bg-white border-b border-r border-slate-200 rotate-45"></div>
+                </div>
+             )}
+        </div>
       </footer>
     </main>
   );
